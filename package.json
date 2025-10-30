@@ -1,0 +1,15 @@
+{
+  "name": "employee-attendance-tracker",
+  "version": "1.0.0",
+  "description": "Full-stack employee attendance tracker",
+  "scripts": {
+    "dev": "cd backend && npm run dev",
+    "start": "cd backend && npm start",
+    "build": "cd backend && npm install",
+    "frontend": "cd frontend && npm start",
+    "frontend-build": "cd frontend && npm run build"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

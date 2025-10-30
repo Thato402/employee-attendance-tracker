@@ -1,0 +1,15 @@
+[build]
+builder = "nixpacks"
+buildCommand = "cd backend && npm install"
+
+[deploy]
+startCommand = "cd backend && npm start"
+restartPolicyType = "on_failure"
+
+[build.environment]
+NODE_VERSION = "18"
+
+[deploy.healthcheck]
+path = "/api/health"
+interval = 30
+timeout = 10
