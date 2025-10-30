@@ -16,37 +16,34 @@ app.use(cors());
 app.use(express.json());
 
 // MySQL Connection Pool with better configuration
+// MySQL Connection Pool for Railway
 const pool = mysql.createPool({
-  host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'attendance_user',
-  password: process.env.DB_PASSWORD || '123456',
-  database: process.env.DB_NAME || 'attendance_tracker',
-  port: process.env.DB_PORT || 3306,
+  host: process.env.MYSQLHOST || process.env.DB_HOST || 'localhost',
+  user: process.env.MYSQLUSER || process.env.DB_USER || 'root',
+  password: process.env.MYSQLPASSWORD || process.env.DB_PASSWORD || '',
+  database: process.env.MYSQLDATABASE || process.env.DB_NAME || 'attendance_tracker',
+  port: process.env.MYSQLPORT || process.env.DB_PORT || 3306,
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0,
-  acquireTimeout: 60000,
-  timeout: 60000,
-  reconnect: true
+  queueLimit: 0
 });
 
+// Test database connection
 // Test database connection
 const testConnection = () => {
   pool.getConnection((err, connection) => {
     if (err) {
       console.error('❌ Database connection failed:', err.message);
-      console.log('🔧 Troubleshooting tips:');
-      console.log('1. Check if MySQL service is running');
-      console.log('2. Verify database credentials in .env file');
-      console.log('3. Ensure database and user exist');
-      console.log('4. Check user privileges');
-      
-      // Retry connection after 5 seconds
+      console.log('🔧 Database Configuration:');
+      console.log('Host:', process.env.MYSQLHOST || process.env.DB_HOST);
+      console.log('Database:', process.env.MYSQLDATABASE || process.env.DB_NAME);
+      console.log('User:', process.env.MYSQLUSER || process.env.DB_USER);
+      console.log('Port:', process.env.MYSQLPORT || process.env.DB_PORT);
       setTimeout(testConnection, 5000);
     } else {
       console.log('✅ Connected to MySQL database successfully!');
-      console.log(`📊 Database: ${process.env.DB_NAME}`);
-      console.log(`👤 User: ${process.env.DB_USER}`);
+      console.log('📊 Database:', process.env.MYSQLDATABASE || process.env.DB_NAME);
+      console.log('👤 Database User:', process.env.MYSQLUSER || process.env.DB_USER);
       connection.release();
     }
   });
