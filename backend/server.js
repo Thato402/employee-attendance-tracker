@@ -17,6 +17,8 @@ app.use(express.json());
 
 // ==================== MYSQL CONNECTION ====================
 // Use Railway-provided variables if deployed, fallback to local development
+const mysql = require('mysql2');
+
 const pool = mysql.createPool({
   host: process.env.MYSQLHOST,
   user: process.env.MYSQLUSER,
@@ -28,26 +30,16 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
+// Test connection
+pool.getConnection((err, connection) => {
+  if (err) {
+    console.error('❌ Database connection failed:', err.message);
+  } else {
+    console.log('✅ Connected to Railway MySQL database successfully!');
+    connection.release();
+  }
+});
 
-// Test database connection
-const testConnection = () => {
-  pool.getConnection((err, connection) => {
-    if (err) {
-      console.error('❌ Database connection failed:', err.message);
-      console.log('🔧 Railway Environment Variables:', {
-        MYSQLHOST: process.env.MYSQLHOST,
-        MYSQLDATABASE: process.env.MYSQLDATABASE,
-        MYSQLUSER: process.env.MYSQLUSER,
-        MYSQLPORT: process.env.MYSQLPORT
-      });
-      setTimeout(testConnection, 5000); // Retry every 5 seconds
-    } else {
-      console.log('✅ Connected to MySQL database successfully!');
-      connection.release();
-    }
-  });
-};
-testConnection();
 
 // ==================== AUTH MIDDLEWARE ====================
 const authenticateToken = (req, res, next) => {
